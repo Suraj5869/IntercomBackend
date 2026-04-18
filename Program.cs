@@ -15,9 +15,9 @@ namespace RiderIntercom
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAll",
+                options.AddPolicy("AllowAngular",
                     policy => policy
-                        .AllowAnyOrigin()
+                        .WithOrigins("http://localhost:4200")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials());
@@ -41,7 +41,7 @@ namespace RiderIntercom
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseCors("AllowAll");
+            app.UseCors("AllowAngular");
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
