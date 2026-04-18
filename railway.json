@@ -4,9 +4,9 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "dotnet RiderIntercom.dll"
+    "startCommand": "dotnet run --urls=http://0.0.0.0:$PORT"
   },
-  "sdk": {
-    "version": "8.0.100"
+  "nixpacks": {
+    "providers": ["dotnet"]
   }
 }
