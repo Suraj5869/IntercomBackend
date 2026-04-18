@@ -20,7 +20,6 @@ namespace RiderIntercom
                         .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowCredentials());
             });
 
             builder.Services.AddSignalR();
