@@ -41,13 +41,16 @@ namespace RiderIntercom
                 app.UseSwaggerUI();
             }
             app.UseCors("AllowAngular");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
             app.MapHub<RiderHub>("/rideHub");
             app.MapControllers();
-
+            
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            app.Urls.Add($"http://0.0.0.0:{port}");
+            
             app.Run();
         }
     }
