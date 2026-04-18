@@ -35,6 +35,7 @@ namespace RiderIntercom
             builder.Services.AddScoped<UserRepository>();   
             var app = builder.Build();
 
+            app.UseRouting();
             // Configure the HTTP request pipeline.
             // if (app.Environment.IsDevelopment())
             // {
@@ -46,8 +47,11 @@ namespace RiderIntercom
 
             app.UseAuthorization();
 
-            app.MapHub<RiderHub>("/rideHub");
-            app.MapControllers();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<RiderHub>("/rideHub");
+            });
             
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
             app.Urls.Add($"http://0.0.0.0:{port}");
