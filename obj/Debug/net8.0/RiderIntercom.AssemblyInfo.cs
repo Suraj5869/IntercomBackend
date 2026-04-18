@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RiderIntercom")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dff642ebf438a763bea90e13781eefc416536e0e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c386429b9606984ebf938c3f7c953b1663778861")]
 [assembly: System.Reflection.AssemblyProductAttribute("RiderIntercom")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RiderIntercom")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
