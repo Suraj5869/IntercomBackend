@@ -29,6 +29,7 @@ namespace RiderIntercom
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.WebHost.UseUrls("http://0.0.0.0:8080");
             builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             builder.Services.AddScoped<AuthRepository>();
             builder.Services.AddScoped<RoomRepository>();
