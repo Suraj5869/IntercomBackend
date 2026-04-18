@@ -19,7 +19,8 @@ namespace RiderIntercom
                     policy => policy
                         .WithOrigins("http://localhost:4200")
                         .AllowAnyHeader()
-                        .AllowAnyMethod());
+                        .AllowAnyMethod()
+                        .AllowCredentials());
             });
 
             builder.Services.AddSignalR();
