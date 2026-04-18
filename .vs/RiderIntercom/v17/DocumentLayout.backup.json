@@ -3,12 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\services\\dbconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:services\\dbconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\services\\roomrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:services\\roomrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\services\\authrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -21,14 +29,6 @@
     {
       "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\services\\passwordhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:services\\passwordhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\services\\dbconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:services\\dbconnectionfactory.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{84D4BC6A-E292-4A94-809B-083D8D4B0B0C}|RiderIntercom.csproj|c:\\users\\suraj\\onedrive\\desktop\\projects\\riderintercom\\backend\\riderintercom\\hubs\\riderhub.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -78,11 +78,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 5,
               "Title": "UserRepository.cs",
               "DocumentMoniker": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Services\\UserRepository.cs",
               "RelativeDocumentMoniker": "Services\\UserRepository.cs",
@@ -90,8 +90,7 @@
               "RelativeToolTip": "Services\\UserRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAA0AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T10:58:10.462Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-17T10:58:10.462Z"
             },
             {
               "$type": "Document",
@@ -103,18 +102,17 @@
               "RelativeToolTip": "Dtos\\JoinRoomDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAoAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-17T08:01:07.207Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-17T08:01:07.207Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\appsettings.json",
               "RelativeDocumentMoniker": "appsettings.json",
               "ToolTip": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\appsettings.json",
               "RelativeToolTip": "appsettings.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
               "WhenOpened": "2026-04-15T16:25:26.159Z",
               "EditorCaption": ""
@@ -129,8 +127,7 @@
               "RelativeToolTip": "Dtos\\LoginDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:21:57.506Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:21:57.506Z"
             },
             {
               "$type": "Document",
@@ -142,18 +139,17 @@
               "RelativeToolTip": "Dtos\\SignupDto.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:21:34.188Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:21:34.188Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 0,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Program.cs",
               "RelativeDocumentMoniker": "Program.cs",
               "ToolTip": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Program.cs",
               "RelativeToolTip": "Program.cs",
-              "ViewState": "AgIAABAAAAAAAAAAAAAQwCIAAAA5AAAAAAAAAA==",
+              "ViewState": "AgIAABkAAAAAAAAAAAAQwC8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-15T16:19:12.964Z",
               "EditorCaption": ""
@@ -168,8 +164,7 @@
               "RelativeToolTip": "Hubs\\RiderHub.cs",
               "ViewState": "AgIAACoAAAAAAAAAAAAYwDMAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:17:23.11Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:17:23.11Z"
             },
             {
               "$type": "Document",
@@ -181,12 +176,11 @@
               "RelativeToolTip": "Controllers\\RoomController.cs",
               "ViewState": "AgIAAAwAAAAAAAAAAAAQwBcAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:16:41.788Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:16:41.788Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "RoomRepository.cs",
               "DocumentMoniker": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Services\\RoomRepository.cs",
               "RelativeDocumentMoniker": "Services\\RoomRepository.cs",
@@ -207,12 +201,11 @@
               "RelativeToolTip": "Controllers\\AuthController.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAAwC8AAAAPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:14:07.083Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:14:07.083Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "AuthRepository.cs",
               "DocumentMoniker": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Services\\AuthRepository.cs",
               "RelativeDocumentMoniker": "Services\\AuthRepository.cs",
@@ -220,12 +213,11 @@
               "RelativeToolTip": "Services\\AuthRepository.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAwBEAAAAsAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:11:25.652Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:11:25.652Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "PasswordHelper.cs",
               "DocumentMoniker": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Services\\PasswordHelper.cs",
               "RelativeDocumentMoniker": "Services\\PasswordHelper.cs",
@@ -233,18 +225,17 @@
               "RelativeToolTip": "Services\\PasswordHelper.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:09:58.564Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:09:58.564Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 1,
               "Title": "DbConnectionFactory.cs",
               "DocumentMoniker": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Services\\DbConnectionFactory.cs",
               "RelativeDocumentMoniker": "Services\\DbConnectionFactory.cs",
               "ToolTip": "C:\\Users\\Suraj\\OneDrive\\Desktop\\Projects\\RiderIntercom\\Backend\\RiderIntercom\\Services\\DbConnectionFactory.cs",
               "RelativeToolTip": "Services\\DbConnectionFactory.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAwAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAvAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-04-15T16:07:56.437Z",
               "EditorCaption": ""
@@ -259,8 +250,7 @@
               "RelativeToolTip": "Interfaces\\IDbConnectionFactory.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:07:31.406Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:07:31.406Z"
             },
             {
               "$type": "Document",
@@ -272,8 +262,7 @@
               "RelativeToolTip": "Models\\RoomParticipant.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:03:46.329Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:03:46.329Z"
             },
             {
               "$type": "Document",
@@ -285,8 +274,7 @@
               "RelativeToolTip": "Models\\Room.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:03:15.575Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:03:15.575Z"
             },
             {
               "$type": "Document",
@@ -298,8 +286,7 @@
               "RelativeToolTip": "Models\\User.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-04-15T16:02:40.114Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-04-15T16:02:40.114Z"
             }
           ]
         }

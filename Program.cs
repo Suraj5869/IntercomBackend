@@ -15,9 +15,9 @@ namespace RiderIntercom
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
+                options.AddPolicy("AllowAll",
                     policy => policy
-                        .WithOrigins("http://localhost:4200")
+                        .AllowAnyOrigin()
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials());
@@ -32,7 +32,7 @@ namespace RiderIntercom
             builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             builder.Services.AddScoped<AuthRepository>();
             builder.Services.AddScoped<RoomRepository>();
-            builder.Services.AddScoped<UserRepository>();
+            builder.Services.AddScoped<UserRepository>();   
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -41,7 +41,7 @@ namespace RiderIntercom
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseCors("AllowAngular");
+            app.UseCors("AllowAll");
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
