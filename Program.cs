@@ -9,6 +9,8 @@ namespace RiderIntercom
     {
         public static void Main(string[] args)
         {
+            AppContext.SetSwitch("System.Net.DisableIPv6", true);
+
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
@@ -35,23 +37,27 @@ namespace RiderIntercom
             builder.Services.AddScoped<UserRepository>();   
             var app = builder.Build();
 
+            app.UseRouting();
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            // if (app.Environment.IsDevelopment())
+            // {
                 app.UseSwagger();
                 app.UseSwaggerUI();
-            }
+            // }
             app.UseCors("AllowAngular");
             //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
-            app.MapHub<RiderHub>("/rideHub");
-            app.MapControllers();
-
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+                endpoints.MapHub<RiderHub>("/rideHub");
+            });
+            
             var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
             app.Urls.Add($"http://0.0.0.0:{port}");
-
+            
             app.Run();
         }
     }
