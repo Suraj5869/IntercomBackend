@@ -19,7 +19,8 @@ namespace RiderIntercom
                     policy => policy
                         .WithOrigins("http://localhost:4200")
                         .AllowAnyHeader()
-                        .AllowAnyMethod());
+                        .AllowAnyMethod()
+                        .AllowCredentials());
             });
 
             builder.Services.AddSignalR();
@@ -41,12 +42,15 @@ namespace RiderIntercom
                 app.UseSwaggerUI();
             }
             app.UseCors("AllowAngular");
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseAuthorization();
 
             app.MapHub<RiderHub>("/rideHub");
             app.MapControllers();
+
+            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+            app.Urls.Add($"http://0.0.0.0:{port}");
 
             app.Run();
         }

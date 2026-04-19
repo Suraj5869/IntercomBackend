@@ -1,6 +1,5 @@
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\appsettings.json
-C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\railway.json
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\RiderIntercom.staticwebassets.endpoints.json
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\RiderIntercom.exe
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\RiderIntercom.deps.json
