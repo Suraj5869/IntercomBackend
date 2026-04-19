@@ -19,7 +19,7 @@ namespace RiderIntercom
             {
                 options.AddPolicy("AllowAngular",
                     policy => policy
-                        .WithOrigins("http://localhost:4200")
+                        .WithOrigins("http://localhost:4200", "https://rider-intercom-ui.vercel.app/", "https://rider-intercom-ui-suraj5869s-projects.vercel.app/")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials());
