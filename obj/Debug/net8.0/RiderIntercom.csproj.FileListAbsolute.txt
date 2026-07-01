@@ -74,10 +74,13 @@ C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\staticwebassets.build.json.cache
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\staticwebassets.build.endpoints.json
-C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\RiderInt.B52E62DB.Up2Date
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\RiderIntercom.dll
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\refint\RiderIntercom.dll
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\RiderIntercom.pdb
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\RiderIntercom.genruntimeconfig.cache
 C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\ref\RiderIntercom.dll
+C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\bin\Debug\net8.0\System.Formats.Asn1.dll
+C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\swae.build.ex.cache
+C:\Users\Suraj\OneDrive\Desktop\Projects\RiderIntercom\Backend\RiderIntercom\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

@@ -33,6 +33,22 @@
   },
   {
     "ContainingType": "RiderIntercom.Controllers.RoomController",
+    "Method": "GetPlaylist",
+    "RelativePath": "api/Room/{roomId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "roomId",
+        "Type": "System.Guid",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "RiderIntercom.Controllers.RoomController",
     "Method": "Create",
     "RelativePath": "api/Room/create",
     "HttpMethod": "POST",
@@ -40,9 +56,9 @@
     "Order": 0,
     "Parameters": [
       {
-        "Name": "userId",
-        "Type": "System.Guid",
-        "IsRequired": false
+        "Name": "createRoomRequest",
+        "Type": "RiderIntercom.Dtos.CreateRoomRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []
@@ -64,24 +80,13 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "RiderIntercom.Controllers.WeatherForecastController",
-    "Method": "Get",
-    "RelativePath": "WeatherForecast",
-    "HttpMethod": "GET",
+    "ContainingType": "RiderIntercom.Controllers.RoomController",
+    "Method": "UploadSong",
+    "RelativePath": "api/Room/upload",
+    "HttpMethod": "POST",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
-    "ReturnTypes": [
-      {
-        "Type": "System.Collections.Generic.IEnumerable\u00601[[RiderIntercom.WeatherForecast, RiderIntercom, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
-        "MediaTypes": [
-          "text/plain",
-          "application/json",
-          "text/json"
-        ],
-        "StatusCode": 200
-      }
-    ],
-    "EndpointName": "GetWeatherForecast"
+    "ReturnTypes": []
   }
 ]
