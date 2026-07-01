@@ -1,4 +1,4 @@
-﻿
+﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.FileProviders;
@@ -7,7 +7,6 @@ using RiderIntercom.Exceptions;
 using RiderIntercom.Hubs;
 using RiderIntercom.Interfaces;
 using RiderIntercom.Services;
-using System.Text;
 
 namespace RiderIntercom
 {
@@ -21,55 +20,65 @@ namespace RiderIntercom
             var jwtKey = builder.Configuration["Jwt:Key"];
 
             // Add services to the container.
-            builder.Services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
-    {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
+            builder
+                .Services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
 
-        ValidIssuer = builder.Configuration["Jwt:Issuer"],
-        ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-    };
+                        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                        ValidAudience = builder.Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+                    };
 
-    // 🔥 IMPORTANT for SignalR
-    options.Events = new JwtBearerEvents
-    {
-        OnMessageReceived = context =>
-        {
-            var accessToken = context.Request.Query["access_token"];
-            var path = context.HttpContext.Request.Path;
+                    // 🔥 IMPORTANT for SignalR
+                    options.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
 
-            if (!string.IsNullOrEmpty(accessToken) &&
-                path.StartsWithSegments("/hub"))
-            {
-                context.Token = accessToken;
-            }
+                            if (
+                                !string.IsNullOrEmpty(accessToken)
+                                && path.StartsWithSegments("/hub")
+                            )
+                            {
+                                context.Token = accessToken;
+                            }
 
-            return Task.CompletedTask;
-        }
-    };
-});
+                            return Task.CompletedTask;
+                        },
+                    };
+                });
 
             builder.Services.AddAuthorization();
 
-
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy("AllowAngular",
-                    policy => policy
-                        .WithOrigins("http://localhost:4200", "https://rider-intercom-ui.vercel.app", "https://rider-intercom-ui-suraj5869s-projects.vercel.app", "https://localhost")
-                        .AllowAnyHeader()
-                        .AllowAnyMethod()
-                        .AllowCredentials());
+                options.AddPolicy(
+                    "AllowAngular",
+                    policy =>
+                        policy
+                            .WithOrigins(
+                                "http://localhost:4200",
+                                "https://rider-intercom-ui.vercel.app",
+                                "https://rider-intercom-ui-suraj5869s-projects.vercel.app",
+                                "https://localhost"
+                            )
+                            .AllowAnyHeader()
+                            .AllowAnyMethod()
+                            .AllowCredentials()
+                );
             });
 
             builder.Services.AddSignalR();
@@ -102,31 +111,7 @@ namespace RiderIntercom
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
-            app.UseStaticFiles(new StaticFileOptions
-            {
-                FileProvider =
-        new PhysicalFileProvider(
-            Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "Uploads")),
-
-                RequestPath = "/uploads",
-
-                OnPrepareResponse = ctx =>
-                {
-                    ctx.Context.Response.Headers.Append(
-                        "Access-Control-Allow-Origin",
-                        "http://localhost:4200");
-
-                    ctx.Context.Response.Headers.Append(
-                        "Access-Control-Allow-Headers",
-                        "*");
-
-                    ctx.Context.Response.Headers.Append(
-                        "Access-Control-Allow-Methods",
-                        "*");
-                }
-            });
+            
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
@@ -138,25 +123,35 @@ namespace RiderIntercom
                 app.Urls.Add($"http://0.0.0.0:{port}");
             }
 
-            var uploadPath = Path.Combine(
-    Directory.GetCurrentDirectory(),
-    "Uploads");
+            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
 
-            if (!Directory.Exists(uploadPath))
-            {
-                Directory.CreateDirectory(uploadPath);
-            }
+            // Create directory if missing
+            Directory.CreateDirectory(uploadPath);
 
             app.UseStaticFiles();
 
             app.UseStaticFiles(
                 new StaticFileOptions
                 {
-                    FileProvider =
-                        new PhysicalFileProvider(uploadPath),
+                    FileProvider = new PhysicalFileProvider(uploadPath),
 
-                    RequestPath = "/uploads"
-                });
+                    RequestPath = "/uploads",
+                    //OnPrepareResponse = ctx =>
+                    //{
+                    //    ctx.Context.Response.Headers.Append(
+                    //        "Access-Control-Allow-Origin",
+                    //        "http://localhost:4200");
+
+                    //    ctx.Context.Response.Headers.Append(
+                    //        "Access-Control-Allow-Headers",
+                    //        "*");
+
+                    //    ctx.Context.Response.Headers.Append(
+                    //        "Access-Control-Allow-Methods",
+                    //        "*");
+                    //}
+                }
+            );
 
             app.Run();
         }
