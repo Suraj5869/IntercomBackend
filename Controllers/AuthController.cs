@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RiderIntercom.Dtos;
 using RiderIntercom.Models;
 using RiderIntercom.Services;
@@ -11,10 +10,11 @@ namespace RiderIntercom.Controllers
     public class AuthController : ControllerBase
     {
         private readonly AuthRepository _repo;
-
-        public AuthController(AuthRepository repo)
+        private readonly JwtService _jwt;
+        public AuthController(AuthRepository repo, JwtService jwt)
         {
             _repo = repo;
+            _jwt = jwt;
         }
 
         [HttpPost("signup")]
@@ -41,10 +41,13 @@ namespace RiderIntercom.Controllers
             if (user == null || !PasswordHelper.Verify(dto.Password, user.PasswordHash))
                 return Unauthorized();
 
+            var token = _jwt.GenerateToken(user.Id.ToString(), user.Name);
+
             return Ok(new
             {
                 userId = user.Id,
-                name = user.Name
+                name = user.Name,
+                token = token
             });
         }
     }

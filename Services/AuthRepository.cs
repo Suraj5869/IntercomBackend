@@ -15,8 +15,8 @@ namespace RiderIntercom.Services
 
         public async Task CreateUser(User user)
         {
-            var sql = @"INSERT INTO public.Users (Id, Name, Email, PasswordHash)
-                    VALUES (@Id, @Name, @Email, @PasswordHash)";
+            var sql = @"INSERT INTO public.Users (Id, Name, Email, PasswordHash, created_at)
+                    VALUES (@Id, @Name, @Email, @PasswordHash, NOW())";
 
             using var conn = _db.CreateConnection();
             await conn.ExecuteAsync(sql, user);

@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using RiderIntercom.Dtos;
 using RiderIntercom.Interfaces;
 using RiderIntercom.Models;
 
@@ -13,7 +14,7 @@ namespace RiderIntercom.Services
             _db = db;
         }
 
-        public async Task<string> CreateRoom(Guid userId)
+        public async Task<CreateRoomResponse> CreateRoom(Guid userId)
         {
             var roomCode = Guid.NewGuid().ToString().Substring(0, 6);
 
@@ -30,10 +31,14 @@ namespace RiderIntercom.Services
                 "INSERT INTO public.Rooms VALUES (@Id, @RoomCode, @CreatedBy, NOW())",
                 room);
 
-            return roomCode;
+            return new CreateRoomResponse
+            {
+                RoomId = room.Id,
+                RoomCode = room.RoomCode
+            };
         }
 
-        public async Task JoinRoom(Guid userId, string roomCode)
+        public async Task<Guid> JoinRoom(Guid userId, string roomCode)
         {
             using var conn = _db.CreateConnection();
 
@@ -49,6 +54,8 @@ namespace RiderIntercom.Services
                     RoomId = room.Id,
                     UserId = userId
                 });
+
+            return room.Id;
         }
     }
 }
