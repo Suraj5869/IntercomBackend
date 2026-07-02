@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using RiderIntercom.Models;
 using RiderIntercom.Services;
 using System.Text.RegularExpressions;
 
@@ -60,10 +61,20 @@ namespace RiderIntercom.Hubs
             }
         }
 
-        public async Task SendMessage(string roomCode, string message)
+        public async Task SendMessage(string roomCode, string message, string userId, string userName)
         {
+            var chatMessage = new
+            {
+                MessageId = Guid.NewGuid().ToString(),
+                RoomCode = roomCode,
+                SenderId = userId,
+                SenderName = userName,
+                Message = message,
+                SentAt = DateTime.UtcNow
+            };
+
             await Clients.Group(roomCode)
-                .SendAsync("ReceiveMessage", message);
+                .SendAsync("ReceiveMessage", chatMessage);
         }
 
         public async Task SendOffer(string roomCode, string offer)

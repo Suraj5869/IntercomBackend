@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using RiderIntercom.Exceptions;
 using RiderIntercom.Hubs;
@@ -122,36 +121,6 @@ namespace RiderIntercom
             {
                 app.Urls.Add($"http://0.0.0.0:{port}");
             }
-
-            var uploadPath = Path.Combine(Directory.GetCurrentDirectory(), "Uploads");
-
-            // Create directory if missing
-            Directory.CreateDirectory(uploadPath);
-
-            app.UseStaticFiles();
-
-            app.UseStaticFiles(
-                new StaticFileOptions
-                {
-                    FileProvider = new PhysicalFileProvider(uploadPath),
-
-                    RequestPath = "/uploads",
-                    //OnPrepareResponse = ctx =>
-                    //{
-                    //    ctx.Context.Response.Headers.Append(
-                    //        "Access-Control-Allow-Origin",
-                    //        "http://localhost:4200");
-
-                    //    ctx.Context.Response.Headers.Append(
-                    //        "Access-Control-Allow-Headers",
-                    //        "*");
-
-                    //    ctx.Context.Response.Headers.Append(
-                    //        "Access-Control-Allow-Methods",
-                    //        "*");
-                    //}
-                }
-            );
 
             app.Run();
         }
