@@ -2,7 +2,9 @@
 {
     public class RoomMusicState
     {
-            public string SongUrl { get; set; }
-            public DateTime StartTime { get; set; }
+        public Guid SongId { get; set; }
+        public string SongName { get; set; }
+        public string SongUrl { get; set; }
+        public DateTime StartTime { get; set; }
     }
 }

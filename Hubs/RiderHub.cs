@@ -66,7 +66,9 @@ namespace RiderIntercom.Hubs
                 var state = MusicStates[roomCode];
                 await Clients.Caller.SendAsync("MusicPlay", new
                 {
+                    songId = state.SongId,
                     songUrl = state.SongUrl,
+                    songName = state.SongName,
                     startTime = state.StartTime.ToString("o")
                 });
             }
@@ -138,6 +140,8 @@ namespace RiderIntercom.Hubs
 
             MusicStates[roomCode] = new RoomMusicState
             {
+                SongId = songId,
+                SongName = songName,
                 SongUrl = songUrl,
                 StartTime = startTime
             };
@@ -213,6 +217,8 @@ namespace RiderIntercom.Hubs
 
             MusicStates[roomCode] = new RoomMusicState
             {
+                SongId = next.Id,
+                SongName = next.SongName,
                 SongUrl = next.SongUrl,
                 StartTime = startTime
             };
