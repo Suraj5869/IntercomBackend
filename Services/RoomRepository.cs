@@ -34,7 +34,8 @@ namespace RiderIntercom.Services
             return new CreateRoomResponse
             {
                 RoomId = room.Id,
-                RoomCode = room.RoomCode
+                RoomCode = room.RoomCode,
+                CreatedBy = userId
             };
         }
 
