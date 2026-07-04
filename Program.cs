@@ -91,6 +91,8 @@ namespace RiderIntercom
             builder.Services.AddScoped<RoomRepository>();
             builder.Services.AddScoped<UserRepository>();
             builder.Services.AddScoped<JwtService>();
+            builder.Services.AddScoped<PlaylistRepository>();
+            builder.Services.AddScoped<ClaudinaryService>();
             builder.Services.Configure<FormOptions>(options =>
             {
                 options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB

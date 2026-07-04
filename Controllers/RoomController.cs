@@ -25,7 +25,7 @@ namespace RiderIntercom.Controllers
         public async Task<IActionResult> Create(CreateRoomRequest createRoomRequest)
         {
             var code = await _repo.CreateRoom(createRoomRequest.UserId);
-            return Ok(new { roomId = code.RoomId, roomCode = code.RoomCode });
+            return Ok(new { roomId = code.RoomId, roomCode = code.RoomCode, createdBy = code.CreatedBy });
         }
 
         [Authorize]
@@ -33,7 +33,8 @@ namespace RiderIntercom.Controllers
         public async Task<IActionResult> Join(JoinRoomDto joinRoom)
         {
             Guid id = await _repo.JoinRoom(joinRoom.UserId, joinRoom.Code);
-            return Ok(new { roomId=id, message = "Joined" });
+            var room = await _repo.GetRoomById(id);
+            return Ok(new { roomId=id, message = "Joined", createdBy = room?.CreatedBy });
         }
     }
 }

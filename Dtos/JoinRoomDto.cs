@@ -18,5 +18,6 @@ namespace RiderIntercom.Dtos
     {
         public Guid RoomId { get; set; }   
         public string RoomCode { get; set; }
+        public Guid CreatedBy { get; set; }
     }
 }

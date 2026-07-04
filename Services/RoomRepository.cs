@@ -57,5 +57,21 @@ namespace RiderIntercom.Services
 
             return room.Id;
         }
+
+        public async Task<Room?> GetRoomByCode(string roomCode)
+        {
+            using var conn = _db.CreateConnection();
+            return await conn.QueryFirstOrDefaultAsync<Room>(
+                "SELECT * FROM public.Rooms WHERE RoomCode = @RoomCode",
+                new { RoomCode = roomCode });
+        }
+
+        public async Task<Room?> GetRoomById(Guid roomId)
+        {
+            using var conn = _db.CreateConnection();
+            return await conn.QueryFirstOrDefaultAsync<Room>(
+                "SELECT * FROM public.Rooms WHERE Id = @Id",
+                new { Id = roomId });
+        }
     }
 }
