@@ -64,17 +64,32 @@ namespace RiderIntercom.Hubs
             }));
 
             // late-joiners / reconnects get whatever is currently playing so
-            // they land in sync instead of starting silent
-            if (MusicStates.ContainsKey(roomCode))
+            // they land in sync instead of starting silent. If the room's
+            // music is paused, sync the paused state instead of playing —
+            // otherwise a refresh would start audio for just that client
+            // while everyone else's is correctly silent.
+            if (MusicStates.TryGetValue(roomCode, out var state))
             {
-                var state = MusicStates[roomCode];
-                await Clients.Caller.SendAsync("MusicPlay", new
+                if (state.IsPaused)
                 {
-                    songId = state.SongId,
-                    songUrl = state.SongUrl,
-                    songName = state.SongName,
-                    startTime = state.StartTime.ToString("o")
-                });
+                    await Clients.Caller.SendAsync("MusicSyncPaused", new
+                    {
+                        songId = state.SongId,
+                        songUrl = state.SongUrl,
+                        songName = state.SongName,
+                        position = state.PausedAtSeconds
+                    });
+                }
+                else
+                {
+                    await Clients.Caller.SendAsync("MusicPlay", new
+                    {
+                        songId = state.SongId,
+                        songUrl = state.SongUrl,
+                        songName = state.SongName,
+                        startTime = state.StartTime.ToString("o")
+                    });
+                }
             }
         }
 
