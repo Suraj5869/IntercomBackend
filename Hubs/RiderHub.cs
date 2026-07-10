@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace RiderIntercom.Hubs
 {
-    public class RiderHub:Hub
+    public class RiderHub : Hub
     {
         private static Dictionary<string, Dictionary<string, (string userId, string userName)>> Rooms = new();
         private static Dictionary<string, RoomMusicState> MusicStates = new();
@@ -54,9 +54,13 @@ namespace RiderIntercom.Hubs
 
             await Groups.AddToGroupAsync(Context.ConnectionId, roomCode);
 
-            await Clients.Group(roomCode).SendAsync("UsersInRoom", room.Values.Select(u => new {
-                id = u.userId,
-                name = u.userName
+            // connectionId is included so clients can address signaling
+            // messages (offer/answer/ICE) at a specific peer instead of
+            // broadcasting them to everyone in the room.
+            await Clients.Group(roomCode).SendAsync("UsersInRoom", room.Select(u => new {
+                connectionId = u.Key,
+                id = u.Value.userId,
+                name = u.Value.userName
             }));
 
             // late-joiners / reconnects get whatever is currently playing so
@@ -86,11 +90,35 @@ namespace RiderIntercom.Hubs
 
                 await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomCode);
 
-                await Clients.Group(roomCode).SendAsync("UsersInRoom", roomUsers.Values.Select(u => new {
-                    id = u.userId,
-                    name = u.userName
+                await Clients.Group(roomCode).SendAsync("UsersInRoom", roomUsers.Select(u => new {
+                    connectionId = u.Key,
+                    id = u.Value.userId,
+                    name = u.Value.userName
                 }));
+
+                // Tell everyone else this connection is gone so they can
+                // tear down the RTCPeerConnection they had for it, instead
+                // of leaving a dead/half-negotiated connection lying around.
+                await Clients.Group(roomCode).SendAsync("PeerLeft", Context.ConnectionId);
             }
+        }
+
+        // Browser tab closes / network drops without an explicit LeaveRoom call.
+        public override async Task OnDisconnectedAsync(Exception? exception)
+        {
+            foreach (var kvp in Rooms)
+            {
+                if (kvp.Value.Remove(Context.ConnectionId))
+                {
+                    await Clients.Group(kvp.Key).SendAsync("UsersInRoom", kvp.Value.Select(u => new {
+                        connectionId = u.Key,
+                        id = u.Value.userId,
+                        name = u.Value.userName
+                    }));
+                    await Clients.Group(kvp.Key).SendAsync("PeerLeft", Context.ConnectionId);
+                }
+            }
+            await base.OnDisconnectedAsync(exception);
         }
 
         public async Task SendMessage(string roomCode, string message, string userId, string userName)
@@ -109,22 +137,30 @@ namespace RiderIntercom.Hubs
                 .SendAsync("ReceiveMessage", chatMessage);
         }
 
-        public async Task SendOffer(string roomCode, string offer)
+        // All three signaling calls are now targeted at a single peer
+        // (targetConnectionId) instead of broadcast to the whole room via
+        // OthersInGroup. With more than 2 people in a room, broadcasting
+        // meant every client's single RTCPeerConnection received offers/
+        // answers meant for other pairs, which is what produced the
+        // "Called in wrong state: stable" error. The sender's own
+        // connectionId is forwarded so the recipient knows which of its
+        // per-peer RTCPeerConnections to route the message to.
+        public async Task SendOffer(string roomCode, string targetConnectionId, string offer)
         {
-            await Clients.OthersInGroup(roomCode)
-                .SendAsync("ReceiveOffer", offer);
+            await Clients.Client(targetConnectionId)
+                .SendAsync("ReceiveOffer", Context.ConnectionId, offer);
         }
 
-        public async Task SendAnswer(string roomCode, string answer)
+        public async Task SendAnswer(string roomCode, string targetConnectionId, string answer)
         {
-            await Clients.OthersInGroup(roomCode)
-                .SendAsync("ReceiveAnswer", answer);
+            await Clients.Client(targetConnectionId)
+                .SendAsync("ReceiveAnswer", Context.ConnectionId, answer);
         }
 
-        public async Task SendIceCandidate(string roomCode, string candidate)
+        public async Task SendIceCandidate(string roomCode, string targetConnectionId, string candidate)
         {
-            await Clients.OthersInGroup(roomCode)
-                .SendAsync("ReceiveIceCandidate", candidate);
+            await Clients.Client(targetConnectionId)
+                .SendAsync("ReceiveIceCandidate", Context.ConnectionId, candidate);
         }
 
         public async Task UpdateSpeaking(string roomCode, string userId, bool isSpeaking)
@@ -157,8 +193,38 @@ namespace RiderIntercom.Hubs
 
         public async Task PauseMusic(string roomCode, double positionSeconds)
         {
-            MusicStates.Remove(roomCode);
+            // Keep the paused position/song around instead of clearing it,
+            // so ResumeMusic (and late joiners) know what to restart.
+            if (MusicStates.TryGetValue(roomCode, out var state))
+            {
+                state.PausedAtSeconds = positionSeconds;
+                state.IsPaused = true;
+            }
             await Clients.Group(roomCode).SendAsync("MusicPause", positionSeconds);
+        }
+
+        // Resumes the song that was paused, re-broadcasting a fresh
+        // startTime offset by the paused position so every client's drift
+        // correction lands them back in sync.
+        public async Task ResumeMusic(string roomCode)
+        {
+            if (!MusicStates.TryGetValue(roomCode, out var state) || !state.IsPaused)
+            {
+                await Clients.Caller.SendAsync("MusicError", "Nothing to resume");
+                return;
+            }
+
+            var startTime = DateTime.UtcNow.AddSeconds(1) - TimeSpan.FromSeconds(state.PausedAtSeconds);
+            state.StartTime = startTime;
+            state.IsPaused = false;
+
+            await Clients.Group(roomCode).SendAsync("MusicPlay", new
+            {
+                songId = state.SongId,
+                songUrl = state.SongUrl,
+                songName = state.SongName,
+                startTime = startTime.ToString("o")
+            });
         }
 
         public async Task StopMusic(string roomCode)
