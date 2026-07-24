@@ -15,6 +15,10 @@ namespace RiderIntercom.Hubs
         private static Dictionary<string, Guid> HandledEndings = new();
         private static readonly object _advanceLock = new();
 
+        private static Dictionary<string, Dictionary<string, RiderLocation>> RoomLocations = new();
+        private static Dictionary<string, DestinationPoint> RoomDestinations = new();
+        private static Dictionary<string, DestinationPoint> RoomStops = new();
+
         private readonly UserRepository _userRepository;
         private readonly PlaylistRepository _playlistRepo;
         private readonly RoomRepository _roomRepo;
@@ -91,6 +95,39 @@ namespace RiderIntercom.Hubs
                     });
                 }
             }
+
+            if (RoomDestinations.TryGetValue(roomCode, out var destination))
+            {
+                await Clients.Caller.SendAsync("DestinationSet", destination);
+            }
+
+            if (RoomStops.TryGetValue(roomCode, out var stop))
+            {
+                await Clients.Caller.SendAsync("StopSet", stop);
+            }
+
+            if (RoomLocations.TryGetValue(roomCode, out var locations))
+            {
+                await Clients.Caller.SendAsync("AllLocations", locations.Values);
+            }
+        }
+
+        public async Task RequestMapState(string roomCode)
+        {
+            if (RoomDestinations.TryGetValue(roomCode, out var destination))
+            {
+                await Clients.Caller.SendAsync("DestinationSet", destination);
+            }
+
+            if (RoomStops.TryGetValue(roomCode, out var stop))
+            {
+                await Clients.Caller.SendAsync("StopSet", stop);
+            }
+
+            if (RoomLocations.TryGetValue(roomCode, out var locations))
+            {
+                await Clients.Caller.SendAsync("AllLocations", locations.Values);
+            }
         }
 
         public async Task LeaveRoom(string roomCode)
@@ -115,6 +152,11 @@ namespace RiderIntercom.Hubs
                 // tear down the RTCPeerConnection they had for it, instead
                 // of leaving a dead/half-negotiated connection lying around.
                 await Clients.Group(roomCode).SendAsync("PeerLeft", Context.ConnectionId);
+
+                if (RoomLocations.TryGetValue(roomCode, out var roomLocations) && roomLocations.Remove(Context.ConnectionId))
+                {
+                    await Clients.Group(roomCode).SendAsync("LocationRemoved", Context.ConnectionId);
+                }
             }
         }
 
@@ -131,6 +173,11 @@ namespace RiderIntercom.Hubs
                         name = u.Value.userName
                     }));
                     await Clients.Group(kvp.Key).SendAsync("PeerLeft", Context.ConnectionId);
+
+                    if (RoomLocations.TryGetValue(kvp.Key, out var roomLocs) && roomLocs.Remove(Context.ConnectionId))
+                    {
+                        await Clients.Group(kvp.Key).SendAsync("LocationRemoved", Context.ConnectionId);
+                    }
                 }
             }
             await base.OnDisconnectedAsync(exception);
@@ -311,6 +358,107 @@ namespace RiderIntercom.Hubs
                 songName = next.SongName,
                 startTime = startTime.ToString("o")
             });
+        }
+
+        // --- Map: final destination, stop/meeting point, live locations ---
+
+        // Room-creator only, same authorization pattern as SkipMusic —
+        // identity comes from the JWT claim, not a client-supplied field.
+        public async Task SetDestination(string roomCode, double lat, double lng, string label)
+        {
+            var callerId = CallerUserId;
+            if (callerId == null)
+            {
+                await Clients.Caller.SendAsync("LocationError", "Not authenticated");
+                return;
+            }
+
+            var room = await _roomRepo.GetRoomByCode(roomCode);
+            if (room == null || room.CreatedBy != callerId)
+            {
+                await Clients.Caller.SendAsync("LocationError", "Only the room creator can set the destination");
+                return;
+            }
+
+            var destination = new DestinationPoint
+            {
+                Lat = lat,
+                Lng = lng,
+                Label = label,
+                SetByUserId = callerId.ToString()
+            };
+
+            RoomDestinations[roomCode] = destination;
+
+            await Clients.Group(roomCode).SendAsync("DestinationSet", destination);
+        }
+
+        // Any rider can propose a meeting point — riders starting from
+        // different places rally here before continuing. No creator check,
+        // unlike SetDestination.
+        public async Task AddStop(string roomCode, double lat, double lng, string label)
+        {
+            var callerId = CallerUserId;
+
+            var stop = new DestinationPoint
+            {
+                Lat = lat,
+                Lng = lng,
+                Label = label,
+                SetByUserId = callerId?.ToString() ?? ""
+            };
+
+            RoomStops[roomCode] = stop;
+
+            await Clients.Group(roomCode).SendAsync("StopSet", stop);
+        }
+
+        public async Task ClearStop(string roomCode)
+        {
+            if (RoomStops.Remove(roomCode))
+            {
+                await Clients.Group(roomCode).SendAsync("StopCleared");
+            }
+        }
+
+        // Throttle calls to this on the CALLER's side (e.g. every 8-10s or
+        // on ~20m movement) — this broadcasts on every invoke with no
+        // throttling of its own. etaMinutes is computed client-side (the
+        // caller already has a route to their current target — the active
+        // stop if one exists, else the final destination) and forwarded
+        // here so every other rider can display it without each of them
+        // running their own routing call for this one peer.
+        public async Task UpdateLocation(string roomCode, string userId, string userName, double lat, double lng, double? etaMinutes)
+        {
+            if (!RoomLocations.ContainsKey(roomCode))
+                RoomLocations[roomCode] = new Dictionary<string, RiderLocation>();
+
+            var location = new RiderLocation
+            {
+                ConnectionId = Context.ConnectionId,
+                UserId = userId,
+                UserName = userName,
+                Lat = lat,
+                Lng = lng,
+                EtaMinutes = etaMinutes,
+                UpdatedAt = DateTime.UtcNow
+            };
+
+            RoomLocations[roomCode][Context.ConnectionId] = location;
+
+            await Clients.Group(roomCode).SendAsync("LocationUpdated", location);
+        }
+
+        // Lets a rider explicitly stop sharing without leaving the room/call.
+        public async Task StopSharingLocation(string roomCode)
+        {
+            if (RoomLocations.TryGetValue(roomCode, out var locations))
+            {
+                if (locations.Remove(Context.ConnectionId))
+                {
+                    await Clients.Group(roomCode).SendAsync("LocationRemoved", Context.ConnectionId);
+                }
+            }
         }
     }
 }

@@ -49,7 +49,7 @@ namespace RiderIntercom
 
                             if (
                                 !string.IsNullOrEmpty(accessToken)
-                                && path.StartsWithSegments("/hub")
+                                && path.StartsWithSegments("/rideHub")
                             )
                             {
                                 context.Token = accessToken;
