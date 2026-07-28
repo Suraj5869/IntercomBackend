@@ -428,7 +428,7 @@ namespace RiderIntercom.Hubs
         // stop if one exists, else the final destination) and forwarded
         // here so every other rider can display it without each of them
         // running their own routing call for this one peer.
-        public async Task UpdateLocation(string roomCode, string userId, string userName, double lat, double lng, double? etaMinutes)
+        public async Task UpdateLocation(string roomCode, string userId, string userName, double lat, double lng, double? etaMinutes, string travelMode = "bike")
         {
             if (!RoomLocations.ContainsKey(roomCode))
                 RoomLocations[roomCode] = new Dictionary<string, RiderLocation>();
@@ -441,6 +441,7 @@ namespace RiderIntercom.Hubs
                 Lat = lat,
                 Lng = lng,
                 EtaMinutes = etaMinutes,
+                TravelMode = travelMode,
                 UpdatedAt = DateTime.UtcNow
             };
 

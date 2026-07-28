@@ -8,6 +8,7 @@
         public double Lat { get; set; }
         public double Lng { get; set; }
         public double? EtaMinutes { get; set; }
+        public string? TravelMode { get; set; }
         public DateTime UpdatedAt { get; set; }
     }
 }
