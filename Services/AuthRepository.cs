@@ -73,6 +73,7 @@ namespace RiderIntercom.Services
         public async Task ResetPassword(Guid resetTokenId, Guid userId, string passwordHash)
         {
             using var conn = _db.CreateConnection();
+            await conn.OpenAsync();
             using var transaction = conn.BeginTransaction();
 
             try
