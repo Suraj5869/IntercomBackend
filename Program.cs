@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.IdentityModel.Tokens;
@@ -78,6 +78,12 @@ namespace RiderIntercom
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddHttpClient("Brevo", client =>
+            {
+                client.BaseAddress = new Uri("https://api.brevo.com/");
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
 
             builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             builder.Services.AddScoped<AuthRepository>();
