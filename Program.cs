@@ -18,7 +18,6 @@ namespace RiderIntercom
             var builder = WebApplication.CreateBuilder(args);
             var jwtKey = builder.Configuration["Jwt:Key"];
 
-            // Add services to the container.
             builder
                 .Services.AddAuthentication(options =>
                 {
@@ -33,13 +32,11 @@ namespace RiderIntercom
                         ValidateAudience = true,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
-
                         ValidIssuer = builder.Configuration["Jwt:Issuer"],
                         ValidAudience = builder.Configuration["Jwt:Audience"],
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
                     };
 
-                    // 🔥 IMPORTANT for SignalR
                     options.Events = new JwtBearerEvents
                     {
                         OnMessageReceived = context =>
@@ -47,10 +44,7 @@ namespace RiderIntercom
                             var accessToken = context.Request.Query["access_token"];
                             var path = context.HttpContext.Request.Path;
 
-                            if (
-                                !string.IsNullOrEmpty(accessToken)
-                                && path.StartsWithSegments("/rideHub")
-                            )
+                            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/rideHub"))
                             {
                                 context.Token = accessToken;
                             }
@@ -82,7 +76,6 @@ namespace RiderIntercom
 
             builder.Services.AddSignalR();
             builder.Services.AddControllers();
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -93,31 +86,36 @@ namespace RiderIntercom
             builder.Services.AddScoped<JwtService>();
             builder.Services.AddScoped<PlaylistRepository>();
             builder.Services.AddScoped<ClaudinaryService>();
+            builder.Services.AddScoped<EmailService>();
+
             builder.Services.Configure<FormOptions>(options =>
             {
-                options.MultipartBodyLengthLimit = 50 * 1024 * 1024; // 50 MB
+                options.MultipartBodyLengthLimit = 50 * 1024 * 1024;
             });
+
             var app = builder.Build();
 
             app.UseRouting();
-            // Configure the HTTP request pipeline.
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
             app.UseCors("AllowAngular");
             app.UseHttpsRedirection();
 
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
-            
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<RiderHub>("/rideHub");
             });
+
             var port = Environment.GetEnvironmentVariable("PORT");
             if (!string.IsNullOrEmpty(port))
             {
