@@ -85,6 +85,12 @@ namespace RiderIntercom
                 client.Timeout = TimeSpan.FromSeconds(15);
             });
 
+            builder.Services.AddHttpClient("Mapbox", client =>
+            {
+                client.BaseAddress = new Uri("https://api.mapbox.com/");
+                client.Timeout = TimeSpan.FromSeconds(15);
+            });
+
             builder.Services.AddScoped<IDbConnectionFactory, DbConnectionFactory>();
             builder.Services.AddScoped<AuthRepository>();
             builder.Services.AddScoped<RoomRepository>();
@@ -93,6 +99,7 @@ namespace RiderIntercom
             builder.Services.AddScoped<PlaylistRepository>();
             builder.Services.AddScoped<ClaudinaryService>();
             builder.Services.AddScoped<EmailService>();
+            builder.Services.AddScoped<MapService>();
 
             builder.Services.Configure<FormOptions>(options =>
             {
