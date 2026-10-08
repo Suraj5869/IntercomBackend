@@ -171,9 +171,11 @@ namespace RiderIntercom.Services
                 }
             }
 
-            result.TrafficDelaySeconds = Math.Max(
-                0,
-                result.DurationSeconds - result.TypicalDurationSeconds);
+            result.TrafficDelaySeconds = result.TypicalDurationSeconds > 0
+                ? Math.Max(
+                    0,
+                    result.DurationSeconds - result.TypicalDurationSeconds)
+                : 0;
 
             result.TrafficLevel = GetOverallTrafficLevel(result.TrafficSegments);
             result.TrafficDataAvailable = result.TrafficSegments.Any(
