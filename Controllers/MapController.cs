@@ -53,7 +53,8 @@ namespace RiderIntercom.Controllers
             [FromQuery] double fromLat,
             [FromQuery] double fromLng,
             [FromQuery] double toLat,
-            [FromQuery] double toLng)
+            [FromQuery] double toLng,
+            [FromQuery] string travelMode = "car")
         {
             if (!IsValidCoordinate(fromLat, fromLng) ||
                 !IsValidCoordinate(toLat, toLng))
@@ -61,12 +62,19 @@ namespace RiderIntercom.Controllers
                 return BadRequest(new { message = "Invalid route coordinates." });
             }
 
+            if (!string.Equals(travelMode, "car", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(travelMode, "bike", StringComparison.OrdinalIgnoreCase))
+            {
+                return BadRequest(new { message = "Invalid travel mode. Use 'car' or 'bike'." });
+            }
+
             return Ok(
                 await _mapService.GetRouteAsync(
                     fromLat,
                     fromLng,
                     toLat,
-                    toLng));
+                    toLng,
+                    travelMode));
         }
 
         private static bool IsValidCoordinate(double lat, double lng)
