@@ -93,8 +93,18 @@ namespace RiderIntercom.Services
             double fromLat,
             double fromLng,
             double toLat,
-            double toLng)
+            double toLng,
+            string travelMode = "car")
         {
+            if (string.Equals(travelMode, "bike", StringComparison.OrdinalIgnoreCase))
+            {
+                return await GetTwoWheelerRouteAsync(
+                    fromLat,
+                    fromLng,
+                    toLat,
+                    toLng);
+            }
+
             var client = CreateClient();
             var coordinates =
                 $"{Invariant(fromLng)},{Invariant(fromLat)};{Invariant(toLng)},{Invariant(toLat)}";
@@ -182,6 +192,213 @@ namespace RiderIntercom.Services
                 segment => !string.Equals(segment.Level, "unknown", StringComparison.OrdinalIgnoreCase));
 
             return result;
+        }
+
+        private async Task<MapRouteResponse> GetTwoWheelerRouteAsync(
+            double fromLat,
+            double fromLng,
+            double toLat,
+            double toLng)
+        {
+            var apiKey = _configuration["GoogleRoutes:ApiKey"];
+
+            if (string.IsNullOrWhiteSpace(apiKey))
+            {
+                throw new InvalidOperationException(
+                    "GoogleRoutes:ApiKey is not configured. Bike routing requires a Google Routes API key.");
+            }
+
+            var client = _httpClientFactory.CreateClient();
+            client.Timeout = TimeSpan.FromSeconds(15);
+
+            var requestBody = new
+            {
+                origin = new
+                {
+                    location = new
+                    {
+                        latLng = new
+                        {
+                            latitude = fromLat,
+                            longitude = fromLng
+                        }
+                    }
+                },
+                destination = new
+                {
+                    location = new
+                    {
+                        latLng = new
+                        {
+                            latitude = toLat,
+                            longitude = toLng
+                        }
+                    }
+                },
+                travelMode = "TWO_WHEELER",
+                routingPreference = "TRAFFIC_AWARE"
+            };
+
+            using var request = new HttpRequestMessage(
+                HttpMethod.Post,
+                "https://routes.googleapis.com/directions/v2:computeRoutes");
+
+            request.Headers.Add("X-Goog-Api-Key", apiKey);
+            request.Headers.Add(
+                "X-Goog-FieldMask",
+                "routes.duration,routes.distanceMeters,routes.polyline.encodedPolyline,routes.legs.steps.distanceMeters,routes.legs.steps.navigationInstruction,routes.legs.steps.polyline.encodedPolyline");
+
+            request.Content = new StringContent(
+                JsonSerializer.Serialize(requestBody),
+                System.Text.Encoding.UTF8,
+                "application/json");
+
+            using var response = await client.SendAsync(request);
+            await EnsureSuccess(response, "Google two-wheeler route");
+
+            await using var stream = await response.Content.ReadAsStreamAsync();
+            using var document = await JsonDocument.ParseAsync(stream);
+            var root = document.RootElement;
+
+            if (!root.TryGetProperty("routes", out var routes) ||
+                routes.ValueKind != JsonValueKind.Array ||
+                routes.GetArrayLength() == 0)
+            {
+                throw new InvalidOperationException("Google returned no two-wheeler route.");
+            }
+
+            var route = routes[0];
+            var result = new MapRouteResponse
+            {
+                DurationSeconds = ParseDurationSeconds(route, "duration"),
+                TypicalDurationSeconds = ParseDurationSeconds(route, "duration"),
+                DistanceMeters = GetDouble(route, "distanceMeters"),
+                TrafficDelaySeconds = 0,
+                TrafficLevel = "unknown",
+                TrafficDataAvailable = false
+            };
+
+            if (route.TryGetProperty("polyline", out var polyline) &&
+                polyline.TryGetProperty("encodedPolyline", out var encoded) &&
+                encoded.ValueKind == JsonValueKind.String)
+            {
+                result.Coordinates.AddRange(
+                    DecodeGooglePolyline(encoded.GetString() ?? string.Empty));
+            }
+
+            if (route.TryGetProperty("legs", out var legs) &&
+                legs.ValueKind == JsonValueKind.Array)
+            {
+                foreach (var leg in legs.EnumerateArray())
+                {
+                    if (!leg.TryGetProperty("steps", out var steps) ||
+                        steps.ValueKind != JsonValueKind.Array)
+                    {
+                        continue;
+                    }
+
+                    foreach (var step in steps.EnumerateArray())
+                    {
+                        var stepCoordinates = new List<MapCoordinate>();
+
+                        if (step.TryGetProperty("polyline", out var stepPolyline) &&
+                            stepPolyline.TryGetProperty("encodedPolyline", out var stepEncoded) &&
+                            stepEncoded.ValueKind == JsonValueKind.String)
+                        {
+                            stepCoordinates.AddRange(
+                                DecodeGooglePolyline(stepEncoded.GetString() ?? string.Empty));
+                        }
+
+                        var firstCoordinate = stepCoordinates.FirstOrDefault();
+                        if (firstCoordinate is null)
+                        {
+                            continue;
+                        }
+
+                        var instruction = step.TryGetProperty(
+                            "navigationInstruction",
+                            out var navigationInstruction)
+                            ? navigationInstruction
+                            : default;
+
+                        result.Steps.Add(
+                            new MapRouteStep
+                            {
+                                Distance = GetDouble(step, "distanceMeters"),
+                                Name = GetString(instruction, "instructions") ?? string.Empty,
+                                ManeuverType = GetString(instruction, "maneuver") ?? string.Empty,
+                                Modifier = null,
+                                ManeuverLocation = firstCoordinate
+                            });
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static double ParseDurationSeconds(JsonElement element, string propertyName)
+        {
+            var duration = GetString(element, propertyName);
+            if (string.IsNullOrWhiteSpace(duration))
+            {
+                return 0;
+            }
+
+            var value = duration.TrimEnd('s');
+            return double.TryParse(
+                value,
+                System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture,
+                out var seconds)
+                ? seconds
+                : 0;
+        }
+
+        private static List<MapCoordinate> DecodeGooglePolyline(string encoded)
+        {
+            var coordinates = new List<MapCoordinate>();
+            var index = 0;
+            var latitude = 0;
+            var longitude = 0;
+
+            while (index < encoded.Length)
+            {
+                latitude += DecodeGooglePolylineValue(encoded, ref index);
+                longitude += DecodeGooglePolylineValue(encoded, ref index);
+
+                coordinates.Add(
+                    new MapCoordinate
+                    {
+                        Lat = latitude / 1e5,
+                        Lng = longitude / 1e5
+                    });
+            }
+
+            return coordinates;
+        }
+
+        private static int DecodeGooglePolylineValue(string encoded, ref int index)
+        {
+            var result = 0;
+            var shift = 0;
+
+            while (index < encoded.Length)
+            {
+                var character = encoded[index++];
+                var value = character - 63;
+                result |= (value & 0x1f) << shift;
+                shift += 5;
+
+                if (value < 0x20)
+                {
+                    break;
+                }
+            }
+
+            return (result & 1) != 0
+                ? ~(result >> 1)
+                : result >> 1;
         }
 
         private void AddSteps(JsonElement leg, MapRouteResponse result)
