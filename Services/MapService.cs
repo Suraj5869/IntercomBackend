@@ -212,6 +212,9 @@ namespace RiderIntercom.Services
                 clientId = "riderintercom";
             }
 
+            var client = _httpClientFactory.CreateClient();
+            client.Timeout = TimeSpan.FromSeconds(20);
+
             var requestBody = new
             {
                 locations = new[]
